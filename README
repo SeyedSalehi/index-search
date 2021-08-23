@@ -1,3 +1,52 @@
 
-Installation Requirements:
+                            Index and Search Project:
 
+Installation Requirements:
+    1. docker engine and runtime to build and run images (tested version 20.10.7)
+    2. docker-compose for multi container environment (tested version 3.7)
+    3. enough memory and space on the hard drive (1.3 GB)
+
+Running:
+    only run the below command and you should be able to visit the website at http://127.0.0.1:8000
+    docker-compose up -d
+
+    Note: Please allow Elasticsearch container to boot up (~30 s) before testing the website. To check
+          when Elasticsearch service is available, port 9200 is forwarded and it can be checked at:
+          http://127.0.0.1:9200
+
+Assumptions:
+    1. Currently, only json files are allowed. However, a json file can have multiple json objects.
+    2. The uploaded files can be saved or not. Currently, activating the "save", will save the files on the
+       container. However, a volume can be mounted to keep the files on the host.
+    3. In the webapp, the only possible search is with input keywords by the user, the "query" is "multi-match" and all
+       the fields are searched. The result however, is table-formatted based on the first layer json keys.
+
+REST APIs:
+    POST:
+
+    upload: not idempotent as a json files cannot be updated twice
+    /api/v1/upload
+
+    example:
+    POST http://127.0.0.1:8000/api/v1/upload
+    file is given as a file pointer
+
+    GET:
+
+    search:
+    /api/v1/search
+
+    example:
+    example:
+    GET http://127.0.0.1:8000/api/v1/search
+    query is given as a json string
+    headers are given as regular python dictionary
+
+Unit tests:
+    Location: test.py
+    Please run the unit tests once as two of the successfully uploaded files cannot be uploaded again because of
+    POST request being non-idempotent (see REST API section)
+
+    Two work around to this:
+    1. docker-compose build & docker-compose run
+    2. touch the file to force server reload
