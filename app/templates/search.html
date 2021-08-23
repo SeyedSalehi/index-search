@@ -1,0 +1,55 @@
+{% extends "_base.html" %}
+
+{% block title %}Search Page{% endblock %}
+
+{% block body %}
+<div class="container">
+    {% if error %}
+        {{ error }}
+    {% endif %}
+    <form  class="form-group" method="POST" >
+        <div class="row justify-content-center">
+            {% if search_fields %}
+                <div class="col-xs-10">
+                    <label for="search_field">Enter keyword to search</label>
+                    <input type="text" class="form-control form-control-sm" id="search_field" placeholder="keyword" name="search_words"><br><br>
+                    <label>Common Fields</label>
+                    <table class="table table-bordered">
+                    <tr>
+                    {% for field in search_fields %}
+                        <td style="word-wrap:break-word; max-width:400px;">
+                            {{ field }}
+                        </td>
+                    {% endfor %}
+                    </tr>
+                    </table>
+                    </br>
+                    <input class="btn btn-outline-success" name="btn-search" type="submit" value="Search">
+                </div>
+            {% endif %}
+        </div>
+    </form>
+    <div class="row justify-content-center">
+        {% if page %}
+            <div class="col-xs-10">
+                <table class="table table-bordered">
+                    {% for sf in search_fields %}
+                        <th class="text-center">{{ sf }}</th>
+                    {% endfor %}
+                    <th class="text-center"> Time Stamp</th>
+                    {% for item in page %}
+                        <tr class="table_{{ loop.cycle('odd', 'even') }} table-sm table-bordered">
+                            {% for field in item %}
+                                <td>
+                                    {{ item[field] }} <!--|truncate(300, True, '...')-->
+                                </td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

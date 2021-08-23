@@ -1,0 +1,27 @@
+{% extends "_base.html" %}
+
+{% block title %}Upload Page{% endblock %}
+
+{% block body %}
+<div class="container">
+    {% if error %}
+        {{ error }}
+    {% endif %}
+    <div id="loading"></div>
+    <div id="content">
+        <h3>Please upload a single file to index</h3>
+        <form action = "" method = "POST" enctype = "multipart/form-data">
+            <p><input type = "file" name = "file" /></p>
+            <p><input class="btn btn-outline-success" type="submit" name="upload" value="Upload" onclick="loading();"></p>
+        </form>
+        <p><input class="btn btn-outline-success" name="btn-search" type="button"
+                           onclick="location.href='http://127.0.0.1:8000/search';" value="Go to Search" /></p>
+    </div>
+</div>
+<script type="text/javascript">// <![CDATA[
+        function loading(){
+            $("#loading").show();
+
+        }
+// ]]></script>
+{% endblock %}

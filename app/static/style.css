@@ -1,0 +1,206 @@
+.navbar-fixed-width{
+  width: 100%;
+  padding-right: 15px;
+  padding-left: 15px;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+@media all and (min-width: 576px) {
+  .navbar-fixed-width {
+    max-width: 540px;
+  }
+}
+
+@media all and (min-width: 768px) {
+  .navbar-fixed-width {
+    max-width: 720px;
+  }
+}
+
+@media all and (min-width: 992px) {
+  .navbar-fixed-width {
+    max-width: 960px;
+  }
+}
+
+@media all and (min-width: 1200px) {
+  .navbar-fixed-width {
+    max-width: 1140px;
+  }
+}
+
+.max-table-width{
+	word-wrap:break-word !important; 
+	max-width:800px !important;
+}
+
+.message {
+    width: 100%;
+    background-color: #f0f0f0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #cccccc;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    text-align: center;
+	/*  registration successful message needs emphasizing.  does this negatively impact other "flash" alerts? */
+	font-size: 20pt;
+}
+
+#body {
+    margin-top: 2.0em;
+    margin-left: 0.3em;
+    margin-right: 0.3em;
+    padding-bottom: 5em;
+    display: block;
+}
+
+#users {
+    width: 100%;
+}
+
+.table_even {
+    background-color: #cccccc;
+}
+
+.table_odd {
+    background-color: #f0f0f0;
+}
+
+.inlineTable {
+    display: inline-block !important;
+    overflow-y: auto !important;
+    height: 90% !important;
+}
+
+form fieldset, form fieldset legend, input[type="submit"] {
+        background-color: #f0f0f0;
+    font-family:Verdana, Arial, Helvetica, sans-serif;
+        font-size:12px;
+        border-style: solid;
+        border-width:2px;
+        border-color:#cccccc;
+}
+
+form fieldset{
+        margin:25px 0px 25px 0px;
+        width: 95%;
+        position:relative;
+        display:block;
+        padding: 0px 10px 10px 10px;
+}
+
+form fieldset legend {
+        border-bottom: 0px;
+
+        color:#cccccc;
+        font-weight:bold;
+        font-variant:small-caps;
+        font-size:110%;
+
+        padding:2px 5px;
+        /*  10px bottom margin was creating ugliness on firefox, don't think it's necessary any more */
+        margin:0px 0px 0px 0px;
+        position:relative;
+        top: -12px;
+
+}
+
+form fieldset fieldset {
+    border: 0px;
+    margin: 0px;
+    padding: 4px;
+}
+
+form fieldset label{
+        font-size:80%;
+        display:block;
+        float:left;
+        text-align:right;
+	margin:6px 5px 0px 0px;
+}
+
+input[type="submit"] {
+        border-width:1px;
+        font-weight:bold;
+}
+
+.sort {
+    margin: 0;
+    padding: 0;
+    display: inline;
+    width: 16px;
+    height: 16px;
+}
+
+.sort_selected {
+    background-color: #FFCC11;
+}
+
+th span {
+    vertical-align: middle;
+}
+
+ul.radio {
+        margin: 0 auto;
+}
+
+ul.radio li {
+    display: inline-block;
+    padding: 4px;
+        margin: 4px;
+        background-color: #F99;  /*  color the radio choices since the labels can get separated from the buttons */
+}
+
+.aside {
+        font-style: oblique;
+        font-size: 10pt;
+}
+
+.info {
+	/*background:#FFDDEE;*/
+	font-size:12pt;
+	width:75%;
+	border:1px solid #FDD;
+	margin:1em;
+	padding:.2em;
+}
+.info ul {
+	list-style-type: circle;
+	margin: 0;
+}
+.info h4 {
+	margin: 0 0 0 1em;
+}
+
+.mono {
+	font-family: monospace;
+}
+
+span.status {
+	border-radius: 5px;
+	border: 1px solid orange;
+	color: orange;
+	padding: 1px;
+}
+
+span.status.status-active {
+	border: 1px solid green;
+	color: green;
+}
+
+span.status.status-rolled_off {
+	border: 1px solid red;
+	color: red;
+}
+
+div#loading {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    display: none;
+    top: 30%;
+    background: url(/static/icons/load.gif) no-repeat;
+    cursor: wait;
+    }
