@@ -55,6 +55,12 @@ except Exception as error:
 #     app.logger.info(log_string)
 #     return True
 
+def es_connected():
+    response = requests.get(app.es)
+    if response.status_code == 200:
+        return True
+    return False
+
 
 def index_documents(docs_list):
     """ in case we have more than one document per file
@@ -189,21 +195,28 @@ class UploadFile(Resource):
         fs = request.files['file']
         file_name = fs.filename
         message, code = validate_file(file_name)
+        # file not valid
         if code != 200:
             resp = jsonify({'message': message})
             resp.status_code = code
             return resp
         else:
+            # file is valid
             if app.config['SAVE_FILES']:
                 save_file(fs, file_name)
             docs_str = read_file(fs)
             if docs_str:
                 docs_list = prepare_docs(docs_str)
                 if docs_list:
+                    if not es_connected():
+                        return [], 500
+                    # ready to index
                     index_documents(docs_list)
+                    # add the file_name to the set of processed files to prevent duplicate
                     cur_set = cache.get('PROCESSED_FILES')
                     cur_set.add(fs.filename)
                     cache.set('PROCESSED_FILES', cur_set)
+                    # Also, increment the counter to check for number of file limit
                     cache.set('FILES_COUNTER', cache.get('FILES_COUNTER') + 1)
                     resp = jsonify({'message': "File is indexed"})
                     resp.status_code = 201
@@ -212,7 +225,6 @@ class UploadFile(Resource):
             resp = jsonify({'message': message})
             resp.status_code = 400
             return resp
-
 
 
 api.add_resource(UploadFile, f"{app.config['API_BASE']}/upload/")
@@ -255,8 +267,8 @@ class Search(Resource):
     def get(self):
         if not request.data:
             return [], 400
-        if not app.es:
-            return [], 0
+        if not es_connected():
+            return [], 500
         response = app.es.search(
             index=cache.get('ES_INDEX'), doc_type="_doc",
             body=request.data
