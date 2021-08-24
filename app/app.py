@@ -24,8 +24,7 @@ app.config['SAVE_FILES'] = False
 app.config['CONN_ADAPTER'] = "http://"
 app.config['HOST'] = '0.0.0.0'
 app.config['API_BASE'] = f"/api/v1"
-app.config['ES_URL'] = "http://es1:9200"
-# app.config['ES_URL'] = "http://127.0.0.1:9200"
+app.config['ES_URL'] = "http://127.0.0.1:9200"
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
 
 api = Api(app)
@@ -136,8 +135,8 @@ def validate_file(file_name):
             flash("Files should have extensions")
             return "Files should have extensions", 400
         elif file_ext not in app.config['UPLOAD_EXTENSIONS']:
-            flash("The only allowed file extensions are .txt, .text, and .json")
-            return "The only allowed file extensions is .json", 400
+            flash("The only allowed file extension is .json")
+            return "The only allowed file extension is .json", 400
         elif cache.get('FILES_COUNTER') >= cache.get('MAX_FILES'):
             flash("Maximum number of files  is reached!")
             return "Maximum number of files  is reached!", 400
@@ -190,7 +189,11 @@ class UploadFile(Resource):
         fs = request.files['file']
         file_name = fs.filename
         message, code = validate_file(file_name)
-        if code == 200:
+        if code != 200:
+            resp = jsonify({'message': message})
+            resp.status_code = code
+            return resp
+        else:
             if app.config['SAVE_FILES']:
                 save_file(fs, file_name)
             docs_str = read_file(fs)
@@ -202,13 +205,14 @@ class UploadFile(Resource):
                     cur_set.add(fs.filename)
                     cache.set('PROCESSED_FILES', cur_set)
                     cache.set('FILES_COUNTER', cache.get('FILES_COUNTER') + 1)
-                    resp = jsonify({'message': "file is indexed"})
+                    resp = jsonify({'message': "File is indexed"})
                     resp.status_code = 201
                     return resp
-        else:
+
             resp = jsonify({'message': message})
-            resp.status_code = code
+            resp.status_code = 400
             return resp
+
 
 
 api.add_resource(UploadFile, f"{app.config['API_BASE']}/upload/")
@@ -234,6 +238,10 @@ def upload_file():
                 # we can use upload API to upload files from web application
                 response = requests.post(f"{server_address}{app.config['API_BASE']}/upload/",
                                          files={'file': open(os.path.join(app.config['UPLOAD_FOLDER'], f_name), 'rb')})
+                # We don't need the file after indexing
+                if not app.config['SAVE_FILES']:
+                    os.remove(os.path.join(app.config['UPLOAD_FOLDER'], f_name))
+
                 if response.status_code == 201:
                     flash(f"Please proceed to search")
                 else:
