@@ -55,12 +55,11 @@ except Exception as error:
 #     app.logger.info(log_string)
 #     return True
 
-def es_connected():
-    response = requests.get(app.es)
-    if response.status_code == 200:
-        return True
-    return False
-
+# def es_connected():
+#     response = app.es.cluster.health()
+#     if response.status_code == 200:
+#         return True
+#     return False
 
 def index_documents(docs_list):
     """ in case we have more than one document per file
@@ -208,8 +207,6 @@ class UploadFile(Resource):
             if docs_str:
                 docs_list = prepare_docs(docs_str)
                 if docs_list:
-                    if not es_connected():
-                        return [], 500
                     # ready to index
                     index_documents(docs_list)
                     # add the file_name to the set of processed files to prevent duplicate
@@ -267,7 +264,7 @@ class Search(Resource):
     def get(self):
         if not request.data:
             return [], 400
-        if not es_connected():
+        if not app.es:
             return [], 500
         response = app.es.search(
             index=cache.get('ES_INDEX'), doc_type="_doc",
